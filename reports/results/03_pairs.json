@@ -1,0 +1,603 @@
+{
+  "performance": [
+    {
+      "name": "NIFTY 50",
+      "cagr": 0.09939063267757242,
+      "vol": 0.17498326296487288,
+      "sharpe": 0.3364134581826016,
+      "sortino": 0.45655660019840816,
+      "max_dd": -0.38439853425333426,
+      "calmar": 0.25856142472195265,
+      "total_return": 1.0042176000564678,
+      "start": "2019-04-05",
+      "end": "2026-09-25"
+    },
+    {
+      "name": "Bank pairs scanner (OOS)",
+      "cagr": -0.02668770551503552,
+      "vol": 0.09053075436361832,
+      "sharpe": -0.8207793453461251,
+      "sortino": -1.2311420113081069,
+      "max_dd": -0.2371990326959783,
+      "calmar": -0.11251186487443045,
+      "total_return": -0.1800206485297403,
+      "start": "2019-04-05",
+      "end": "2026-09-25",
+      "alpha_ann": -0.07801271713532154,
+      "alpha_t": -2.3225604656652776,
+      "beta": 0.062143841710498984,
+      "corr": 0.12009199657317267
+    }
+  ],
+  "stats": {
+    "pairs_selected": 59,
+    "periods": 15,
+    "win_rate_pairs": 0.4745762711864407,
+    "avg_pair_pnl": -0.022288366280452214,
+    "most_frequent_pairs": {
+      "bankbaroda/canbk": 4,
+      "federalbnk/canbk": 3,
+      "axisbank/bankbaroda": 3,
+      "sbin/canbk": 3,
+      "indusindbk/pnb": 2
+    },
+    "hdfc_icici_full_sample_p": 0.33882621798039947,
+    "hdfc_icici_share_windows_cointegrated": 0.12359550561797752,
+    "hdfc_icici_selected_count": 1
+  },
+  "cost_sensitivity": [
+    {
+      "cost_bps_per_side": 0.0,
+      "cagr": 0.013896448516123927,
+      "sharpe": -0.3690958629755876
+    },
+    {
+      "cost_bps_per_side": 5.0,
+      "cagr": -0.006600518150931101,
+      "sharpe": -0.5948543563744151
+    },
+    {
+      "cost_bps_per_side": 10.0,
+      "cagr": -0.02668770551503552,
+      "sharpe": -0.8207793453461251
+    },
+    {
+      "cost_bps_per_side": 20.0,
+      "cagr": -0.06566498875946325,
+      "sharpe": -1.272116403307393
+    }
+  ],
+  "trade_log": [
+    {
+      "period_start": "2019-10-15",
+      "pair": "indusindbk/pnb",
+      "p_value": 0.0036816291002478635,
+      "beta": 0.4409237328993958,
+      "half_life": 7.472351633999865,
+      "trades": 14,
+      "pnl": -0.08216869465789389
+    },
+    {
+      "period_start": "2019-10-15",
+      "pair": "icicibank/kotakbank",
+      "p_value": 0.0037452994670530986,
+      "beta": 0.7699112564330584,
+      "half_life": 5.618583042602326,
+      "trades": 28,
+      "pnl": 0.06701989008315268
+    },
+    {
+      "period_start": "2019-10-15",
+      "pair": "hdfcbank/icicibank",
+      "p_value": 0.0067655536355414915,
+      "beta": 0.7005303388480828,
+      "half_life": 6.413885064994857,
+      "trades": 17,
+      "pnl": -0.20598042629036306
+    },
+    {
+      "period_start": "2019-10-15",
+      "pair": "bankbaroda/canbk",
+      "p_value": 0.019702117093520197,
+      "beta": 0.7968944839157917,
+      "half_life": 9.280707638212151,
+      "trades": 4,
+      "pnl": 0.07031769207872407
+    },
+    {
+      "period_start": "2019-10-15",
+      "pair": "indusindbk/bankbaroda",
+      "p_value": 0.045877561854720125,
+      "beta": 0.4710247357147631,
+      "half_life": 9.689320114982163,
+      "trades": 14,
+      "pnl": -0.07666413330663302
+    },
+    {
+      "period_start": "2020-04-22",
+      "pair": "bankbaroda/canbk",
+      "p_value": 0.009448366264679396,
+      "beta": 0.7316558075122213,
+      "half_life": 9.41272871353545,
+      "trades": 42,
+      "pnl": -0.17257276333001548
+    },
+    {
+      "period_start": "2020-04-22",
+      "pair": "federalbnk/canbk",
+      "p_value": 0.02526186784256509,
+      "beta": 0.6706764316448008,
+      "half_life": 19.526745309094753,
+      "trades": 1,
+      "pnl": 0.09336009827182745
+    },
+    {
+      "period_start": "2020-04-22",
+      "pair": "axisbank/bandhanbnk",
+      "p_value": 0.030163866301409385,
+      "beta": 0.6070074743875843,
+      "half_life": 6.168050789440622,
+      "trades": 10,
+      "pnl": -0.035529831165671766
+    },
+    {
+      "period_start": "2020-04-22",
+      "pair": "bankbaroda/federalbnk",
+      "p_value": 0.040276311298593874,
+      "beta": 0.951876997407943,
+      "half_life": 14.404603622536614,
+      "trades": 3,
+      "pnl": -0.11355183221979293
+    },
+    {
+      "period_start": "2020-04-22",
+      "pair": "idfcfirstb/bandhanbnk",
+      "p_value": 0.042006365277733604,
+      "beta": 0.6730403015529671,
+      "half_life": 7.493817657609028,
+      "trades": 1,
+      "pnl": 0.13074029346422567
+    },
+    {
+      "period_start": "2020-10-20",
+      "pair": "kotakbank/canbk",
+      "p_value": 0.0032068443136886774,
+      "beta": 0.3096799602360094,
+      "half_life": 5.579668553285618,
+      "trades": 54,
+      "pnl": -0.20644806994399334
+    },
+    {
+      "period_start": "2020-10-20",
+      "pair": "axisbank/sbin",
+      "p_value": 0.003387334827663578,
+      "beta": 1.0215712653626174,
+      "half_life": 5.730964037292379,
+      "trades": 2,
+      "pnl": 0.11054211375943934
+    },
+    {
+      "period_start": "2020-10-20",
+      "pair": "kotakbank/pnb",
+      "p_value": 0.015506256044776073,
+      "beta": 0.36427070266652234,
+      "half_life": 6.079635667317397,
+      "trades": 61,
+      "pnl": -0.16670745136210863
+    },
+    {
+      "period_start": "2020-10-20",
+      "pair": "icicibank/sbin",
+      "p_value": 0.02276845983768226,
+      "beta": 0.7168681293292913,
+      "half_life": 6.42104390007798,
+      "trades": 0,
+      "pnl": 0.04092205851844044
+    },
+    {
+      "period_start": "2020-10-20",
+      "pair": "axisbank/bankbaroda",
+      "p_value": 0.02408078397602864,
+      "beta": 0.7404403225021545,
+      "half_life": 14.024611311053546,
+      "trades": 2,
+      "pnl": 0.17838726420266826
+    },
+    {
+      "period_start": "2021-04-27",
+      "pair": "axisbank/indusindbk",
+      "p_value": 0.020320619028365176,
+      "beta": 0.6998811126709727,
+      "half_life": 7.083080073891035,
+      "trades": 1,
+      "pnl": 0.05499816851499428
+    },
+    {
+      "period_start": "2021-04-27",
+      "pair": "kotakbank/axisbank",
+      "p_value": 0.020481695410006027,
+      "beta": 0.7378021099429386,
+      "half_life": 7.604244219083054,
+      "trades": 1,
+      "pnl": 0.060648338274313485
+    },
+    {
+      "period_start": "2021-04-27",
+      "pair": "bankbaroda/federalbnk",
+      "p_value": 0.03095792273936862,
+      "beta": 1.0766021792539364,
+      "half_life": 8.696244815867127,
+      "trades": 0,
+      "pnl": 0.0
+    },
+    {
+      "period_start": "2021-04-27",
+      "pair": "bankbaroda/canbk",
+      "p_value": 0.03252516245835423,
+      "beta": 1.0841784894569666,
+      "half_life": 7.4238907380527195,
+      "trades": 0,
+      "pnl": 0.0
+    },
+    {
+      "period_start": "2021-04-27",
+      "pair": "kotakbank/indusindbk",
+      "p_value": 0.0349617739867782,
+      "beta": 0.5286514707216687,
+      "half_life": 8.922031721530363,
+      "trades": 1,
+      "pnl": 0.06938902789383983
+    },
+    {
+      "period_start": "2021-10-27",
+      "pair": "hdfcbank/canbk",
+      "p_value": 0.006338285342134051,
+      "beta": 0.3087610535603719,
+      "half_life": 5.788632272001323,
+      "trades": 29,
+      "pnl": -0.1476455469400496
+    },
+    {
+      "period_start": "2021-10-27",
+      "pair": "pnb/federalbnk",
+      "p_value": 0.007928070176155587,
+      "beta": 0.741044856620009,
+      "half_life": 6.118291350169338,
+      "trades": 14,
+      "pnl": -0.14592679932416175
+    },
+    {
+      "period_start": "2021-10-27",
+      "pair": "hdfcbank/axisbank",
+      "p_value": 0.010388240184773441,
+      "beta": 0.5205310464319657,
+      "half_life": 6.043893316157814,
+      "trades": 7,
+      "pnl": 0.032738616170035595
+    },
+    {
+      "period_start": "2021-10-27",
+      "pair": "axisbank/bandhanbnk",
+      "p_value": 0.011017433393511607,
+      "beta": -0.4205316271822943,
+      "half_life": 14.356775882672395,
+      "trades": 0,
+      "pnl": 0.0
+    },
+    {
+      "period_start": "2021-10-27",
+      "pair": "indusindbk/pnb",
+      "p_value": 0.01155909836104734,
+      "beta": 1.0290214205080677,
+      "half_life": 6.536132780446352,
+      "trades": 1,
+      "pnl": 0.06229900123969734
+    },
+    {
+      "period_start": "2022-05-02",
+      "pair": "federalbnk/canbk",
+      "p_value": 0.04585259663842069,
+      "beta": 0.3558661115007618,
+      "half_life": 8.633459052203301,
+      "trades": 22,
+      "pnl": -0.12145510215281119
+    },
+    {
+      "period_start": "2022-05-02",
+      "pair": "sbin/canbk",
+      "p_value": 0.049191644554538984,
+      "beta": 0.47813724310355615,
+      "half_life": 11.200319541846712,
+      "trades": 1,
+      "pnl": 0.051228409371230965
+    },
+    {
+      "period_start": "2022-11-03",
+      "pair": "hdfcbank/pnb",
+      "p_value": 0.0016968544126197852,
+      "beta": 0.398477535043094,
+      "half_life": 5.7397115845391244,
+      "trades": 1,
+      "pnl": 0.02821976726250175
+    },
+    {
+      "period_start": "2022-11-03",
+      "pair": "kotakbank/idfcfirstb",
+      "p_value": 0.008251456871986695,
+      "beta": 0.2021399352811459,
+      "half_life": 7.752671759926291,
+      "trades": 1,
+      "pnl": 0.06109881766215097
+    },
+    {
+      "period_start": "2022-11-03",
+      "pair": "sbin/canbk",
+      "p_value": 0.016741733826774838,
+      "beta": 0.59355502738159,
+      "half_life": 8.048529122423362,
+      "trades": 1,
+      "pnl": 0.021655099531272093
+    },
+    {
+      "period_start": "2022-11-03",
+      "pair": "kotakbank/bankbaroda",
+      "p_value": 0.018721295617042586,
+      "beta": 0.015824190672961036,
+      "half_life": 9.386931526709587,
+      "trades": 1,
+      "pnl": 0.11521056572418997
+    },
+    {
+      "period_start": "2022-11-03",
+      "pair": "hdfcbank/idfcfirstb",
+      "p_value": 0.021128913893477277,
+      "beta": 0.2474589116057128,
+      "half_life": 8.110053564887384,
+      "trades": 2,
+      "pnl": 0.09368377844679499
+    },
+    {
+      "period_start": "2023-05-10",
+      "pair": "axisbank/canbk",
+      "p_value": 0.0024718435649616404,
+      "beta": 0.6508833482883638,
+      "half_life": 6.443907616549678,
+      "trades": 2,
+      "pnl": 0.06496610602080222
+    },
+    {
+      "period_start": "2023-05-10",
+      "pair": "hdfcbank/bankbaroda",
+      "p_value": 0.0049391083857894275,
+      "beta": 0.34570968678684466,
+      "half_life": 5.469567076439209,
+      "trades": 18,
+      "pnl": -0.06046922298272461
+    },
+    {
+      "period_start": "2023-05-10",
+      "pair": "bandhanbnk/canbk",
+      "p_value": 0.021165470874374426,
+      "beta": -0.566203780744734,
+      "half_life": 8.711927942070245,
+      "trades": 1,
+      "pnl": 0.10036073307396598
+    },
+    {
+      "period_start": "2023-05-10",
+      "pair": "axisbank/bankbaroda",
+      "p_value": 0.025842878992727237,
+      "beta": 0.5403787293275171,
+      "half_life": 7.181817540170356,
+      "trades": 1,
+      "pnl": 0.0007841487767967781
+    },
+    {
+      "period_start": "2023-05-10",
+      "pair": "hdfcbank/pnb",
+      "p_value": 0.027357476975687495,
+      "beta": 0.32621772673023114,
+      "half_life": 7.15754607319945,
+      "trades": 18,
+      "pnl": -0.08608884690181806
+    },
+    {
+      "period_start": "2023-11-09",
+      "pair": "axisbank/bankbaroda",
+      "p_value": 0.0026241862172108536,
+      "beta": 0.6287270753672601,
+      "half_life": 5.0058191496306925,
+      "trades": 10,
+      "pnl": 0.006075267387402938
+    },
+    {
+      "period_start": "2023-11-09",
+      "pair": "axisbank/indusindbk",
+      "p_value": 0.007359776890011154,
+      "beta": 0.5204907221603617,
+      "half_life": 5.873241687038314,
+      "trades": 13,
+      "pnl": -0.06874701836948716
+    },
+    {
+      "period_start": "2023-11-09",
+      "pair": "pnb/federalbnk",
+      "p_value": 0.012550658122923858,
+      "beta": 2.462119348313886,
+      "half_life": 9.00735382774565,
+      "trades": 35,
+      "pnl": -0.09626182245429915
+    },
+    {
+      "period_start": "2023-11-09",
+      "pair": "federalbnk/canbk",
+      "p_value": 0.014085379948322261,
+      "beta": 0.4807293593237685,
+      "half_life": 6.934223069716673,
+      "trades": 33,
+      "pnl": -0.07989784703523406
+    },
+    {
+      "period_start": "2023-11-09",
+      "pair": "hdfcbank/canbk",
+      "p_value": 0.020748162558272946,
+      "beta": -0.1749412861917724,
+      "half_life": 7.630095551884953,
+      "trades": 2,
+      "pnl": 0.10749772548815151
+    },
+    {
+      "period_start": "2024-05-15",
+      "pair": "icicibank/sbin",
+      "p_value": 0.0025846264849444245,
+      "beta": 0.47109552767869795,
+      "half_life": 5.062566531354419,
+      "trades": 31,
+      "pnl": -0.10694558559683853
+    },
+    {
+      "period_start": "2024-05-15",
+      "pair": "kotakbank/federalbnk",
+      "p_value": 0.014047809891499905,
+      "beta": -0.3556051098358364,
+      "half_life": 6.4538072446350725,
+      "trades": 9,
+      "pnl": -0.018055029179327775
+    },
+    {
+      "period_start": "2024-05-15",
+      "pair": "hdfcbank/aubank",
+      "p_value": 0.03141438865089823,
+      "beta": 0.4665768163930618,
+      "half_life": 7.93296578585561,
+      "trades": 10,
+      "pnl": -0.05680061581019458
+    },
+    {
+      "period_start": "2024-11-13",
+      "pair": "kotakbank/aubank",
+      "p_value": 0.009379332624756017,
+      "beta": 0.2146351834138558,
+      "half_life": 6.073484619537698,
+      "trades": 33,
+      "pnl": -0.14013820490984497
+    },
+    {
+      "period_start": "2024-11-13",
+      "pair": "kotakbank/bankbaroda",
+      "p_value": 0.012350572591638215,
+      "beta": -0.13750351420495527,
+      "half_life": 6.4409725932364665,
+      "trades": 18,
+      "pnl": -0.14492841354139718
+    },
+    {
+      "period_start": "2024-11-13",
+      "pair": "kotakbank/pnb",
+      "p_value": 0.01627507327252218,
+      "beta": -0.09185610097498138,
+      "half_life": 6.690981951943292,
+      "trades": 18,
+      "pnl": -0.055284162574020024
+    },
+    {
+      "period_start": "2024-11-13",
+      "pair": "kotakbank/bandhanbnk",
+      "p_value": 0.017064302868139192,
+      "beta": 0.1959247168371539,
+      "half_life": 6.723882509007988,
+      "trades": 38,
+      "pnl": -0.25704399193792427
+    },
+    {
+      "period_start": "2024-11-13",
+      "pair": "kotakbank/canbk",
+      "p_value": 0.019597149778296748,
+      "beta": -0.10123496687809502,
+      "half_life": 6.896549458153895,
+      "trades": 18,
+      "pnl": -0.16469039077091097
+    },
+    {
+      "period_start": "2025-05-21",
+      "pair": "sbin/bankbaroda",
+      "p_value": 0.020375730799656412,
+      "beta": 0.5665385230020542,
+      "half_life": 6.921275389299906,
+      "trades": 1,
+      "pnl": -0.024332905600999877
+    },
+    {
+      "period_start": "2025-05-21",
+      "pair": "sbin/bandhanbnk",
+      "p_value": 0.02319622548462652,
+      "beta": 0.3003645159711702,
+      "half_life": 6.961197894156713,
+      "trades": 9,
+      "pnl": -0.11087630992598685
+    },
+    {
+      "period_start": "2025-05-21",
+      "pair": "sbin/canbk",
+      "p_value": 0.03706098480247653,
+      "beta": 0.4378082180162739,
+      "half_life": 7.676374109928247,
+      "trades": 1,
+      "pnl": 0.015333273873416431
+    },
+    {
+      "period_start": "2025-05-21",
+      "pair": "sbin/idfcfirstb",
+      "p_value": 0.04193228719567065,
+      "beta": 0.3459955295453942,
+      "half_life": 7.8386481502198215,
+      "trades": 1,
+      "pnl": -0.054758750643850385
+    },
+    {
+      "period_start": "2025-11-20",
+      "pair": "idfcfirstb/aubank",
+      "p_value": 0.005193135924060028,
+      "beta": 0.5620408823057861,
+      "half_life": 5.882628303116324,
+      "trades": 29,
+      "pnl": 0.043953159510466966
+    },
+    {
+      "period_start": "2025-11-20",
+      "pair": "sbin/bankbaroda",
+      "p_value": 0.0109334097648132,
+      "beta": 0.8068802367250155,
+      "half_life": 5.928123335867147,
+      "trades": 39,
+      "pnl": -0.1052642080685644
+    },
+    {
+      "period_start": "2025-11-20",
+      "pair": "pnb/canbk",
+      "p_value": 0.013393679618507333,
+      "beta": 0.5704116876424568,
+      "half_life": 6.253984508497285,
+      "trades": 17,
+      "pnl": 0.002714495389249949
+    },
+    {
+      "period_start": "2026-05-27",
+      "pair": "bankbaroda/canbk",
+      "p_value": 0.005300361345968682,
+      "beta": 0.6675644504604856,
+      "half_life": 5.609336393041319,
+      "trades": 20,
+      "pnl": 0.03016415172742981
+    },
+    {
+      "period_start": "2026-05-27",
+      "pair": "icicibank/axisbank",
+      "p_value": 0.04738451606471359,
+      "beta": -0.23330053669022555,
+      "half_life": 15.22884511838739,
+      "trades": 1,
+      "pnl": 0.07591230473305521
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+"""Generate README.md from reports/results/*.json so every number in it comes from code."""
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+R = {p.stem: json.loads(p.read_text()) for p in (ROOT / "reports" / "results").glob("*.json")}
+m1, m2, m3, m4, m5 = (R[k] for k in ["01_market_risk", "02_trend", "03_pairs", "04_factors", "05_portfolio"])
+
+
+def pct(x, d=1, sign=False):
+    return f"{x * 100:+.{d}f}%" if sign else f"{x * 100:.{d}f}%"
+
+
+def f2(x):
+    return f"{x:.2f}"
+
+
+def perf_table(rows, cols=("cagr", "vol", "sharpe", "max_dd")):
+    head = {"cagr": "CAGR", "vol": "Volatility", "sharpe": "Sharpe", "sortino": "Sortino", "max_dd": "Max DD",
+            "calmar": "Calmar", "beta": "Beta", "alpha_ann": "Alpha (ann.)", "alpha_t": "Alpha t-stat", "corr": "Corr to NIFTY"}
+    fmt = {"cagr": pct, "vol": pct, "max_dd": pct, "alpha_ann": lambda v: pct(v, 1, True)}
+    out = "| Strategy | " + " | ".join(head[c] for c in cols) + " |\n|---|" + "---:|" * len(cols) + "\n"
+    for r in rows:
+        cells = []
+        for c in cols:
+            v = r.get(c)
+            cells.append("—" if v is None else fmt.get(c, f2)(v))
+        out += f"| {r['name']} | " + " | ".join(cells) + " |\n"
+    return out
+
+
+d1, g, lev, val = m1["distribution"], m1["garch"], m1["garch"]["leverage_model"], m1["valuation"]
+var_rows = "| Model | Breaches | Expected | Kupiec p | Christoffersen p | Verdict |\n|---|---:|---:|---:|---:|:---:|\n" + "".join(
+    f"| {v['model']} | {v['breaches']} | {v['expected']:.0f} | {v['kupiec_p']:.3f} | {v['christoffersen_p']:.3f} | "
+    f"{'✅ PASS' if v['verdict'] == 'PASS' else '❌ FAIL'} |\n" for v in m1["var_backtest"])
+dd_rows = "| Peak | Trough | Depth | Days to trough | Days to recover |\n|---|---|---:|---:|---:|\n" + "".join(
+    f"| {d['peak']} | {d['trough']} | {pct(d['depth'])} | {d['peak_to_trough_days']} | "
+    f"{'not yet' if d['recovery_days'] is None or d['recovery_days'] != d['recovery_days'] else int(d['recovery_days'])} |\n" for d in m1["drawdowns"][:5])
+
+perf2 = {r["name"]: r for r in m2["performance"]}
+bh2, cl2, vt2 = perf2["NIFTY 50 buy & hold"], perf2["SMA 50/200 — realistic"], perf2["Vol-target 12%"]
+s2 = m2["significance"]; wf = m2["walk_forward"]
+sec_rows = "| Sector | B&H Sharpe | Strategy Sharpe | B&H Max DD | Strategy Max DD |\n|---|---:|---:|---:|---:|\n" + "".join(
+    f"| {s['sector']} | {f2(s['bh_sharpe'])} | {f2(s['strat_sharpe'])} | {pct(s['bh_maxdd'], 0)} | {pct(s['strat_maxdd'], 0)} |\n"
+    for s in sorted(m2["sectors"], key=lambda s: -s["sharpe_gain"]))
+
+p3 = {r["name"]: r for r in m3["performance"]}; st3 = m3["stats"]
+pairs = p3["Bank pairs scanner (OOS)"]
+cost_rows = "| Cost per side | CAGR | Sharpe |\n|---|---:|---:|\n" + "".join(
+    f"| {c['cost_bps_per_side']:.0f} bps | {pct(c['cagr'])} | {f2(c['sharpe'])} |\n" for c in m3["cost_sensitivity"])
+
+ic_rows = "| Signal | Months | Mean IC | IC t-stat | % months IC>0 | Top-quintile CAGR | Universe CAGR |\n|---|---:|---:|---:|---:|---:|---:|\n"
+port4 = {p["factor"]: p for p in m4["portfolios"]}
+for r in m4["ic"]:
+    p = port4[r["factor"]]
+    ic_rows += (f"| {r['factor']} | {r['months']} | {r['mean_IC']:+.3f} | **{r['IC_t_stat']:+.2f}** | "
+                f"{pct(r['pct_months_positive'], 0)} | {pct(p['top_q_cagr'])} | {pct(p['ew_universe_cagr'])} |\n")
+idx_rows = "| NSE index | vs | Since | Years | CAGR | Parent CAGR | Max DD | Parent Max DD | Alpha | t-stat |\n|---|---|---|---:|---:|---:|---:|---:|---:|---:|\n" + "".join(
+    f"| {r['index']} | {r['parent']} | {r['from'][:7]} | {r['years']:.1f} | {pct(r['cagr'])} | {pct(r['parent_cagr'])} | "
+    f"{pct(r['max_dd'], 0)} | {pct(r['parent_max_dd'], 0)} | {pct(r['alpha'], 1, True)} | {r['alpha_t']:.2f} |\n"
+    for r in m4["nse_factor_indices"])
+ex = {r["name"]: r for r in m4["exploratory"]}; exs = m4["exploratory_stats"]; sv = m4["survivorship"]
+ew_univ = ex["Equal-weight universe (same stocks)"]
+nifty_ew = next(r for r in m4["nse_factor_indices"] if r["index"] == "NIFTY50 Equal Weight")
+stress = m5["stress"]
+perf5 = m5["performance"]
+p5 = {r["name"]: r for r in perf5}
+best5 = max(perf5[1:], key=lambda r: r["sharpe"])
+stress_rows = "| Episode | " + " | ".join(stress[next(iter(stress))].keys()) + " |\n|---|" + "---:|" * len(stress[next(iter(stress))]) + "\n"
+for ep, vals in stress.items():
+    stress_rows += f"| {ep} | " + " | ".join(pct(v) for v in vals.values()) + " |\n"
+w5 = m5["current_weights"]
+wt_rows = "| Asset | " + " | ".join(w5) + " |\n|---|" + "---:|" * len(w5) + "\n"
+for a in m5["assets"]:
+    wt_rows += f"| {a} | " + " | ".join(pct(w5[m][a], 0) for m in w5) + " |\n"
+
+readme = f"""# NSE Quant Research Lab
+
+**Five reproducible studies on Indian equity markets — risk modelling, trend following, statistical
+arbitrage, factor investing and portfolio construction — built on real NSE end-of-day data through
+{m5['as_of']}.**
+
+Every number in this README is generated by code (`scripts/build_readme.py` reads `reports/results/*.json`).
+Every backtest is net of transaction costs, uses only information available at the time, earns the
+NSE overnight rate on idle cash, and is tested for statistical significance — not just plotted.
+
+> Python · pandas · NumPy · SciPy · statsmodels · `arch` (GARCH) · scikit-learn (Ledoit-Wolf) · Jupyter
+
+---
+
+## Headline findings
+
+| # | Study | Finding |
+|---|---|---|
+| 1 | Market risk | NIFTY 50 daily returns have excess kurtosis of **{d1['excess_kurtosis']:.1f}**: **{d1['moves_beyond_4sd_observed']}** moves beyond ±4σ vs **{d1['moves_beyond_4sd_expected_if_normal']:.1f}** expected under normality. Of five 99% VaR models, **only GJR-GARCH with skewed-t errors passes both regulatory backtests** (Kupiec & Christoffersen). Volatility responds *only* to bad news (γ = {lev['gamma']:.3f}, α ≈ 0). |
+| 2 | Trend following | The 50/200 "golden cross" compounded **{pct(cl2['cagr'])}** vs **{pct(bh2['cagr'])}** for buy-and-hold, with a *deeper* drawdown. **Volatility targeting cut max drawdown from {pct(bh2['max_dd'], 0)} to {pct(vt2['max_dd'], 0)}** and raised Calmar from {f2(bh2['calmar'])} to {f2(vt2['calmar'])}. Only {s2['share_trials_beating_bh_sharpe']*s2['n_trials']:.0f} of {s2['n_trials']} SMA pairs beat buy-and-hold; Deflated Sharpe of the best = {f2(s2['dsr_best'])} (not significant). |
+| 3 | Pairs trading | HDFC Bank / ICICI Bank is **not cointegrated** (Engle-Granger p = {f2(st3['hdfc_icici_full_sample_p'])}; cointegrated in only {pct(st3['hdfc_icici_share_windows_cointegrated'], 0)} of rolling 1-yr windows). A rolling out-of-sample scanner over 78 bank pairs **lost {pct(abs(pairs['cagr']))} a year** net of costs despite being market-neutral (β = {f2(pairs['beta'])}). |
+| 4 | Factor investing | **Survivorship bias measured:** over {sv['window_start'][:4]}-{sv['window_end'][:4]}, today's NIFTY 50 names equal-weighted compounded **{pct(sv['ew_current_members_cagr'])}** a year vs **{pct(sv['nifty50_ew_index_cagr'])}** for NSE's point-in-time NIFTY50 Equal Weight index — **{sv['bias_pp_per_year']*100:.1f} pp a year of pure hindsight**. Low-volatility was *inverted* in large caps. An India-specific **delivery-surge** signal and 1-month **reversal** were the only signals with \\|IC t\\| > 2; combined (exploratory) they earned {pct(exs['alpha_vs_ew'], 1, True)}/yr over the equal-weight universe (t = {f2(exs['alpha_vs_ew_t'])}, Deflated Sharpe {f2(exs['dsr'])}). |
+| 5 | Portfolio construction | Across 10 sectors + G-Sec + gold, **{best5['name']}** had the best out-of-sample Sharpe (**{f2(best5['sharpe'])}** vs {f2(perf5[0]['sharpe'])} for NIFTY) with max drawdown {pct(best5['max_dd'], 0)} vs {pct(perf5[0]['max_dd'], 0)}. Markowitz max-Sharpe put {pct(max(w5['Max Sharpe (Markowitz)'].values()), 0)} in a single asset and turned over {pct(p5['Max Sharpe (Markowitz)']['avg_turnover_monthly'], 0)} of the book a month. |
+
+### What this project does differently from a typical student backtest
+
+| Typical shortcut | Here |
+|---|---|
+| Hedge ratio / parameters fitted on the whole sample | Rolling formation → out-of-sample trading; Kalman filter; walk-forward parameter selection |
+| No costs, cash earns 0% | 10 bps per side; idle cash earns the NIFTY 1D Rate Index (overnight TREPS) |
+| Report the best parameter set | Report the full grid, **Probabilistic & Deflated Sharpe Ratios**, block-bootstrap Sharpe CIs |
+| "It's cointegrated" asserted | Engle-Granger tested on rolling windows; half-life of mean reversion estimated |
+| Today's index members back-tested | Survivorship bias **quantified** against NSE's point-in-time indices |
+| One volatility number | GARCH, GJR-GARCH, five VaR models with Kupiec & Christoffersen backtests |
+| Narrative written before results | Null and negative results reported as found |
+
+---
+
+## 01 · Market Risk & Regime Lab — [`notebooks/01_market_risk.ipynb`](notebooks/01_market_risk.ipynb)
+
+NIFTY 50, Feb-2012 → {m5['as_of']}: CAGR {pct(d1['ann_return_cagr'])} (price index), volatility {pct(d1['ann_vol'])}, skew {d1['skew']:.2f}.
+Worst day {pct(d1['worst_day'])} ({d1['worst_day_date']}).
+
+![Fat tails](reports/figures/01_fat_tails.png)
+
+**Volatility model.** GARCH(1,1)-t persistence {f2(g['persistence'])} → a volatility shock has a half-life of
+**{g['half_life_days']:.0f} trading days**. Long-run vol {pct(g['long_run_vol'])}; current conditional vol {pct(g['current_cond_vol'])}; peak {pct(g['peak_cond_vol'])} on {g['peak_cond_vol_date']}.
+GJR-GARCH with skewed-t is preferred by both AIC ({lev['aic_gjr_skewt']:.0f} vs {lev['aic_garch_t']:.0f}) and BIC.
+
+![GARCH volatility](reports/figures/01_garch_vol.png)
+
+**99% one-day VaR, backtested out-of-sample over {m1['var_backtest'][0]['days']:,} days:**
+
+{var_rows}
+![VaR during COVID](reports/figures/01_var_covid.png)
+
+**Largest drawdowns**
+
+{dd_rows}
+**Valuation.** Index P/E (z-scored within NSE's pre/post Apr-2021 earnings methodology) showed **no reliable
+link** to next-3-year returns (ρ = {val['corr_pe_z_vs_fwd3y']:+.2f}, overlap-adjusted t = {val['t_stat_overlap_adjusted']:.2f}) — a null result reported as such.
+Current NIFTY P/E: {val['current_pe']:.1f} — lower than on {pct(1 - val['current_pe_percentile_post2021'], 0)} of trading days since the Apr-2021 methodology change.
+
+![Valuation](reports/figures/01_valuation.png)
+
+---
+
+## 02 · Trend Following, Done Properly — [`notebooks/02_trend_following.ipynb`](notebooks/02_trend_following.ipynb)
+
+{perf_table(m2['performance'], ('cagr', 'vol', 'sharpe', 'sortino', 'max_dd', 'calmar'))}
+![Equity curves](reports/figures/02_equity_curves.png)
+
+The crossover whipsawed through 2018-19, sold only *after* the March-2020 crash and missed the V-shaped
+rebound. **Parameter grid ({s2['n_trials']} combinations):** median Sharpe {f2(s2['median_trial_sharpe'])}; best {s2['best_params'][0]}/{s2['best_params'][1]} = {f2(s2['best_sharpe'])};
+Probabilistic Sharpe {f2(s2['psr_best'])}, **Deflated Sharpe {f2(s2['dsr_best'])}** (< 0.95 → can't rule out luck).
+95% bootstrap CI for buy-and-hold Sharpe: [{f2(s2['sharpe_ci_bh'][0])}, {f2(s2['sharpe_ci_bh'][1])}] — even 13 years of data can't pin a Sharpe ratio down tightly.
+
+![Parameter heatmap](reports/figures/02_param_heatmap.png)
+
+**Walk-forward** (re-pick parameters each January from the prior 5 years): CAGR {pct(wf['strategy']['cagr'])} vs {pct(wf['buy_hold']['cagr'])} buy-and-hold, Sharpe {f2(wf['strategy']['sharpe'])} vs {f2(wf['buy_hold']['sharpe'])}.
+
+**Robustness across 12 sectors** (trend × 12% vol target):
+
+{sec_rows}
+![Sectors](reports/figures/02_sector_robustness.png)
+
+---
+
+## 03 · Statistical Arbitrage in Indian Banks — [`notebooks/03_pairs_trading.ipynb`](notebooks/03_pairs_trading.ipynb)
+
+![HDFC vs ICICI](reports/figures/03_hdfc_icici.png)
+
+Scanner: every 6 months, test all 78 pairs of 13 banks on the past 252 days (Engle-Granger p < 0.05,
+half-life 5-40 days), trade the top 5 for the next 126 days (entry |z|>2, exit |z|<0.5, stop |z|>4).
+{st3['pairs_selected']} pairs selected over {st3['periods']} windows; pair win rate {pct(st3['win_rate_pairs'], 0)}.
+
+{perf_table(m3['performance'], ('cagr', 'vol', 'sharpe', 'max_dd', 'beta', 'corr', 'alpha_ann', 'alpha_t'))}
+{cost_rows}
+Even at zero cost the scanner earned less than the overnight rate: cointegration found in one 12-month window
+mostly did not persist into the next six. A real edge would need intraday data or pairs with a structural
+link (holding company vs subsidiary, ETF vs basket).
+
+![Pairs performance](reports/figures/03_pairs_performance.png)
+
+---
+
+## 04 · Factor Investing in NIFTY 50 Stocks — [`notebooks/04_factor_investing.ipynb`](notebooks/04_factor_investing.ipynb)
+
+Monthly rebalance, {m4['universe_size']} stocks, quintile portfolios net of 10 bps. Information Coefficient = Spearman
+correlation of signal vs next-month return.
+
+{ic_rows}
+![Factor quintiles](reports/figures/04_factor_quintiles.png)
+
+**Survivorship bias, same window:** current members equal-weighted {pct(sv['ew_current_members_cagr'])} CAGR vs NIFTY50 Equal Weight index {pct(sv['nifty50_ew_index_cagr'])} vs NIFTY 50 {pct(sv['nifty50_cagr'])} ({sv['window_start']} → {sv['window_end']}).
+
+**Survivorship-free check with NSE's own factor indices:**
+
+{idx_rows}
+![NSE factor indices](reports/figures/04_nse_factor_indices.png)
+
+**Exploratory (in-sample) composite — Reversal + Delivery surge, top quintile, Jul-2020 onward:**
+
+{perf_table(m4['exploratory'], ('cagr', 'vol', 'sharpe', 'max_dd', 'beta', 'alpha_ann', 'alpha_t'))}
+Alpha vs equal-weight universe {pct(exs['alpha_vs_ew'], 1, True)} (t = {f2(exs['alpha_vs_ew_t'])}); Deflated Sharpe {f2(exs['dsr'])} after 6 trials;
+average monthly turnover {pct(exs['avg_monthly_turnover'], 0)}. Labelled exploratory because the signals were combined after seeing
+their ICs — it needs forward paper-trading before real capital.
+
+![Exploratory composite](reports/figures/04_exploratory_equity.png)
+
+---
+
+## 05 · Portfolio Construction — [`notebooks/05_portfolio_construction.ipynb`](notebooks/05_portfolio_construction.ipynb)
+
+Assets: {', '.join(m5['assets'])}. Walk-forward: 252-day estimation window, monthly rebalance, long-only, 10 bps.
+Average correlation between equity sectors: {f2(m5['avg_equity_sector_corr'])}.
+
+{perf_table(perf5, ('cagr', 'vol', 'sharpe', 'sortino', 'max_dd', 'calmar', 'beta'))}
+![Walk-forward](reports/figures/05_walkforward.png)
+
+**Stress tests:**
+
+{stress_rows}
+**Current weights (as of {m5['as_of']}):**
+
+{wt_rows}
+![Weights vs risk](reports/figures/05_weights_vs_risk.png)
+![Correlation](reports/figures/05_correlation.png)
+
+---
+
+## Methodology notes
+
+* **No look-ahead.** Signals use data up to the close of day *t*; positions are held from *t+1*. Pair
+  selection, factor ranks, covariance estimates and strategy parameters are all estimated on past windows only.
+* **Costs.** 10 bps per side per unit of turnover (brokerage + STT + exchange charges + slippage for liquid
+  large caps/ETFs). Pairs-trading sensitivity reported from 0 to 20 bps.
+* **Risk-free rate.** NIFTY 1D Rate Index (overnight collateralised lending), 6.5% p.a. before Jun-2016.
+* **Price returns.** Stock and index series exclude dividends (~1.2-1.5% a year for NIFTY), so comparisons
+  are price-vs-price. G-Sec index returns include accrued interest.
+* **Survivorship.** Single-stock studies use current constituents; the bias is quantified (module 04) and
+  every factor portfolio is benchmarked against the equally biased equal-weight universe.
+* **Statistics.** Newey-West (HAC) t-stats for alpha; block-bootstrap Sharpe CIs; Probabilistic and Deflated
+  Sharpe Ratios (Bailey & López de Prado); Kupiec POF and Christoffersen independence tests for VaR.
+
+## Repository layout
+
+```
+nse-quant-lab/
+├── notebooks/          executed Jupyter notebooks (rendered on GitHub)
+├── research/           the same studies as plain .py (jupytext percent format)
+├── src/nql/            data loaders, metrics & significance tests, chart style
+├── reports/figures/    all charts      reports/results/  machine-readable results (JSON)
+├── data/raw/           NSE EOD CSVs used by the studies
+└── scripts/            fetch_data.sh · run_all.sh · build_readme.py
+```
+
+## Reproduce
+
+```bash
+pip install -r requirements.txt
+bash scripts/fetch_data.sh   # optional: refresh data to the latest trading day
+bash scripts/run_all.sh      # re-executes all notebooks and rebuilds this README
+```
+
+## Limitations & next steps
+
+* Daily close-to-close data only; intraday execution, impact and borrow costs for futures-based shorts are approximated.
+* Point-in-time constituent lists would remove survivorship bias from the single-stock studies entirely.
+* Natural extensions: fundamental factors (earnings quality, value) from annual reports; a regime-switching
+  (Markov) allocation layer; forward paper-trading of the delivery-surge signal.
+
+## Data
+
+NSE end-of-day bhavcopy and index data via the open-source
+[eod2_data](https://github.com/BennyThadikaran/eod2_data) mirror (split/bonus-adjusted equities; one unadjusted
+GOLDBEES split corrected in code). For research and education only — not investment advice.
+"""
+(ROOT / "README.md").write_text(readme)
+print("README written:", len(readme), "chars")

@@ -1,0 +1,159 @@
+{
+  "distribution": {
+    "ann_return_cagr": 0.10431797056884018,
+    "ann_vol": 0.16031509502937244,
+    "skew": -1.091928878108141,
+    "excess_kurtosis": 16.675416494082715,
+    "jarque_bera_p": 0.0,
+    "moves_beyond_4sd_observed": 18,
+    "moves_beyond_4sd_expected_if_normal": 0.228032941198463,
+    "worst_day": -0.12980464127060365,
+    "worst_day_date": "2020-03-23",
+    "best_day": 0.08763205423192066,
+    "best_day_date": "2020-04-07"
+  },
+  "garch": {
+    "omega": 0.022123235789362122,
+    "alpha": 0.07062566328735388,
+    "beta": 0.9039113513174223,
+    "nu": 6.633426633596482,
+    "persistence": 0.9745370146047762,
+    "half_life_days": 26.87369277725898,
+    "long_run_vol": 0.14796872578693918,
+    "current_cond_vol": 0.12431065803416394,
+    "peak_cond_vol": 0.8041920866078517,
+    "peak_cond_vol_date": "2020-03-24",
+    "leverage_model": {
+      "alpha": 1.2223214782229154e-13,
+      "gamma": 0.13390398577415882,
+      "beta": 0.8990797194607589,
+      "skew_lambda": -0.11595308771732345,
+      "nu": 7.268054942716407,
+      "aic_garch_t": 9158.154788179698,
+      "aic_gjr_skewt": 9055.692076202147,
+      "bic_garch_t": 9189.098233801918,
+      "bic_gjr_skewt": 9099.012900073256
+    }
+  },
+  "var_backtest": [
+    {
+      "model": "Historical",
+      "days": 3100,
+      "breaches": 38,
+      "expected": 31.0,
+      "breach_rate": 0.012258064516129033,
+      "kupiec_p": 0.2222942302250359,
+      "christoffersen_p": 0.0010024004214492267,
+      "avg_loss_when_breached": -0.03564376262214544,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "Normal",
+      "days": 3100,
+      "breaches": 54,
+      "expected": 31.0,
+      "breach_rate": 0.017419354838709676,
+      "kupiec_p": 0.0001721993373647108,
+      "christoffersen_p": 0.0023834716372321445,
+      "avg_loss_when_breached": -0.0330623725190143,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "Cornish-Fisher",
+      "days": 3100,
+      "breaches": 18,
+      "expected": 31.0,
+      "breach_rate": 0.005806451612903226,
+      "kupiec_p": 0.010879875197879986,
+      "christoffersen_p": 0.003687295785542346,
+      "avg_loss_when_breached": -0.04389765214746127,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "GARCH-t",
+      "days": 3100,
+      "breaches": 47,
+      "expected": 31.0,
+      "breach_rate": 0.015161290322580645,
+      "kupiec_p": 0.007279651649811994,
+      "christoffersen_p": 0.7443978411675081,
+      "avg_loss_when_breached": -0.032617303149926724,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "GJR-GARCH skew-t",
+      "days": 3100,
+      "breaches": 32,
+      "expected": 31.0,
+      "breach_rate": 0.01032258064516129,
+      "kupiec_p": 0.8574963196905494,
+      "christoffersen_p": 0.4138316994933593,
+      "avg_loss_when_breached": -0.035604454804389785,
+      "verdict": "PASS"
+    }
+  ],
+  "drawdowns": [
+    {
+      "peak": "2020-01-15",
+      "trough": "2020-03-23",
+      "recovered": "2020-11-09",
+      "depth": -0.3843985342533346,
+      "peak_to_trough_days": 48,
+      "recovery_days": 165.0
+    },
+    {
+      "peak": "2015-03-04",
+      "trough": "2016-02-25",
+      "recovered": "2017-03-14",
+      "depth": -0.2251660414061406,
+      "peak_to_trough_days": 256,
+      "recovery_days": 273.0
+    },
+    {
+      "peak": "2021-10-19",
+      "trough": "2022-06-17",
+      "recovered": "2022-11-24",
+      "depth": -0.1722975258496353,
+      "peak_to_trough_days": 173,
+      "recovery_days": 114.0
+    },
+    {
+      "peak": "2024-09-27",
+      "trough": "2025-03-04",
+      "recovered": "2026-01-02",
+      "depth": -0.1576667728357244,
+      "peak_to_trough_days": 112,
+      "recovery_days": 218.0
+    },
+    {
+      "peak": "2026-01-05",
+      "trough": "2026-03-30",
+      "recovered": NaN,
+      "depth": -0.15181808341135383,
+      "peak_to_trough_days": 60,
+      "recovery_days": NaN
+    },
+    {
+      "peak": "2013-05-20",
+      "trough": "2013-08-28",
+      "recovered": "2013-10-18",
+      "depth": -0.14583097635479125,
+      "peak_to_trough_days": 72,
+      "recovery_days": 37.0
+    }
+  ],
+  "valuation": {
+    "corr_pe_z_vs_fwd3y": 0.14267387878198778,
+    "slope_per_1sd": 0.00598567777764701,
+    "t_stat_overlap_adjusted": 0.33887038063736197,
+    "current_pe": 19.56,
+    "current_pe_percentile_post2021": 0.01322556943423953,
+    "bucket_mean_fwd3y": {
+      "Cheapest 20%": 0.13580406321747002,
+      "Q2": 0.12530008305704304,
+      "Q3": 0.0910202209626257,
+      "Q4": 0.12374315025790049,
+      "Richest 20%": 0.14866873611215642
+    }
+  }
+}
